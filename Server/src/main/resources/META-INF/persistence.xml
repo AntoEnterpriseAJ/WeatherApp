@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+  <persistence-unit name="default">
+    <class>org.example.database.model.LocationEntity</class>
+    <class>org.example.database.model.RoleEntity</class>
+    <class>org.example.database.model.UserEntity</class>
+    <class>org.example.database.model.UserRoleEntity</class>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/WeatherData"/>
+      <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+      <property name="jakarta.persistence.jdbc.password" value="1q2w3e"/>
+      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.PostgreSQLPlatform"/>
+      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+    </properties>
+  </persistence-unit>
+</persistence>
