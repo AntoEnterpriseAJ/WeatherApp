@@ -1,59 +1,60 @@
 package org.example.database;
 
 import jakarta.persistence.*;
-import org.example.database.model.UserEntity;
 
-import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DatabaseConnection {
-    private EntityManagerFactory entityManagerFactory;
+    private static final EntityManagerFactory entityManagerFactory;
 
-    public DatabaseConnection() {
-        initEntityManagerFactory();
-    }
-
-    private void initEntityManagerFactory() {
+    static {
         try {
             entityManagerFactory = Persistence.createEntityManagerFactory("default");
-        } catch (Exception e) {
-            System.err.println("Error initializing EntityManagerFactory: " + e.getMessage());
+        } catch (PersistenceException e) {
+            System.err.println("Failed to initialize EntityManagerFactory: " + e.getMessage());
+            throw new ExceptionInInitializerError(e);
         }
     }
 
-    public void close() {
-        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-            entityManagerFactory.close();
-        }
-    }
-
-    public List<UserEntity> getAllUsers() {
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
+    public void executeTransaction(Consumer<EntityManager> consumer) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
 
         try {
-            entityManager = entityManagerFactory.createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-
-            TypedQuery<UserEntity> query = entityManager.createQuery(
-                    "SELECT userEntity FROM UserEntity userEntity", UserEntity.class
-            );
-            List<UserEntity> allUsers = query.getResultList();
-
-            transaction.commit();
-            return allUsers;
-
-        } catch (RuntimeException e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            System.err.println("Transaction error: " + e.getMessage());
-            throw e;
-
+            entityTransaction.begin();
+            consumer.accept(entityManager);
+            entityTransaction.commit();
+        } catch (Exception e) {
+            entityTransaction.rollback();
+            System.err.println("Execute transaction error: " + e.getMessage());
         } finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
+            entityManager.close();
+        }
+    }
+
+    public <R> R executeReturnTransaction(Function<EntityManager, R> function) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        R result = null;
+
+        try {
+            entityTransaction.begin();
+            result = function.apply(entityManager);
+            entityTransaction.commit();
+        } catch (Exception e) {
+            entityTransaction.rollback();
+            System.err.println("Execute returning transaction error: " + e.getMessage());
+        } finally {
+            entityManager.close();
+        }
+
+        return result;
+    }
+
+    public static void closeFactory() {
+        if (entityManagerFactory.isOpen()) {
+            entityManagerFactory.close();
         }
     }
 }
