@@ -1,18 +1,23 @@
 package org.example;
 
-import org.example.database.DatabaseConnection;
-import org.example.database.model.UserEntity;
-
-import javax.xml.crypto.Data;
-import java.util.List;
+import org.example.database.dao.RoleEntityDao;
+import org.example.database.model.RoleEntity;
+import org.example.database.model.enums.Role;
 
 public class App
 {
     public static void main( String[] args )
     {
 //        new Server().run();
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        List<UserEntity> allUsers = databaseConnection.getAllUsers();
-        allUsers.forEach(System.out::println);
+        RoleEntityDao roleEntityDao = new RoleEntityDao();
+
+
+        System.out.println("Roles:");
+        roleEntityDao.getAll().forEach(System.out::println);
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setRole(Role.ADMIN);
+        roleEntityDao.create(roleEntity);
+
+        roleEntityDao.getAll().forEach(System.out::println);
     }
 }
