@@ -1,14 +1,15 @@
 package org.example.database.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.google.gson.JsonObject;
+import jakarta.persistence.*;
+import org.example.database.JsonObjectConverter;
 
 @Entity
 @Table(name = "location", schema = "public")
 public class LocationEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_id_gen")
+    @SequenceGenerator(name = "location_id_gen", sequenceName = "Location_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -20,6 +21,10 @@ public class LocationEntity {
 
     @Column(name = "longitude", nullable = false)
     private Double longitude;
+
+    @Convert(converter = JsonObjectConverter.class)
+    @Column(name = "weather_data", columnDefinition = "json not null")
+    private JsonObject weatherData;
 
     public Long getId() {
         return id;
@@ -53,16 +58,22 @@ public class LocationEntity {
         this.longitude = longitude;
     }
 
-/*
- TODO [Reverse Engineering] create field to map the 'weather_data' column
- Available actions: Define target Java type | Uncomment as is | Remove column mapping
-    @Column(name = "weather_data", columnDefinition = "jsonb not null")
-    private Object weatherData;
-*/
-/*
- TODO [Reverse Engineering] create field to map the 'geom' column
- Available actions: Define target Java type | Uncomment as is | Remove column mapping
-    @Column(name = "geom", columnDefinition = "geometry not null")
-    private Object geom;
-*/
+    public JsonObject getWeatherData() {
+        return weatherData;
+    }
+
+    public void setWeatherData(JsonObject weatherData) {
+        this.weatherData = weatherData;
+    }
+
+    @Override
+    public String toString() {
+        return "LocationEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", weatherData='" + weatherData + '\'' +
+                '}';
+    }
 }
