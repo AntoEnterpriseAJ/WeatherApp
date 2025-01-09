@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JpaBuddyIdeaProjectConfig" reUseTableSchema="true">
-    <option name="reLastEntityCreationPackage" value="src/main/java/org/example/model" />
-    <option name="reverseEngineeringLastDbConnectionId" value="e4491923-053f-4f18-90a7-fe4a8f760823__WeatherData_public" />
+    <option name="reLastEntityCreationPackage" value="src/main/java/org/example/database/model" />
+    <option name="reverseEngineeringLastDbConnectionId" value="e4491923-053f-4f18-90a7-fe4a8f760823" />
   </component>
 </project>
