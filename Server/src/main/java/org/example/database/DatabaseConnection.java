@@ -26,8 +26,8 @@ public class DatabaseConnection {
             consumer.accept(entityManager);
             entityTransaction.commit();
         } catch (Exception e) {
-            entityTransaction.rollback();
             System.err.println("Execute transaction error: " + e.getMessage());
+            entityTransaction.rollback();
         } finally {
             entityManager.close();
         }
@@ -43,8 +43,8 @@ public class DatabaseConnection {
             result = function.apply(entityManager);
             entityTransaction.commit();
         } catch (Exception e) {
-            entityTransaction.rollback();
             System.err.println("Execute returning transaction error: " + e.getMessage());
+            entityTransaction.rollback();
         } finally {
             entityManager.close();
         }
