@@ -1,0 +1,9 @@
+{
+    "weather_data": {
+        "forecast": [
+            {"day": "2025-01-11", "temperature": -2, "condition": "Snowy"},
+            {"day": "2025-01-12", "temperature": 0, "condition": "Snowy"},
+            {"day": "2025-01-13", "temperature": 2, "condition": "Snowy"}
+        ]
+    }
+}
