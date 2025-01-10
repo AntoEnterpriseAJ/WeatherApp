@@ -4,6 +4,7 @@ import org.example.database.DatabaseConnection;
 import org.example.database.model.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserEntityDao implements Dao<UserEntity> {
     DatabaseConnection databaseConnection = new DatabaseConnection();
@@ -14,6 +15,14 @@ public class UserEntityDao implements Dao<UserEntity> {
                 entityManager -> entityManager
                         .createQuery("SELECT user FROM UserEntity user", UserEntity.class).getResultList()
         );
+    }
+
+    public Optional<UserEntity> findByName (String name) {
+        return Optional.ofNullable(databaseConnection.executeReturnTransaction(
+                entityManger -> entityManger.createQuery("SELECT user FROM UserEntity user WHERE user.name = :name", UserEntity.class)
+                        .setParameter("name", name)
+                        .getSingleResult()
+        ));
     }
 
     @Override
