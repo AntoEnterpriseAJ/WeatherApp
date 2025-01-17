@@ -6,11 +6,31 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DatabaseConnection {
-    private static final EntityManagerFactory entityManagerFactory;
+    private final String DEFAULT_PERSISTENCE = "default";
+    private final EntityManagerFactory entityManagerFactory;
 
-    static {
+    public DatabaseConnection() {
         try {
-            entityManagerFactory = Persistence.createEntityManagerFactory("default");
+            this.entityManagerFactory = Persistence.createEntityManagerFactory(DEFAULT_PERSISTENCE);
+        } catch (PersistenceException e) {
+            System.err.println("Failed to initialize EntityManagerFactory: " + e.getMessage());
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public DatabaseConnection(String persistenceUnitName) {
+        try {
+            this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
+        } catch (PersistenceException e) {
+            System.err.println("Failed to initialize EntityManagerFactory: " + e.getMessage());
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    // Constructor that accepts a persistence unit name with additional properties
+    public DatabaseConnection(String persistenceUnitName, Map<String, String> properties) {
+        try {
+            this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
         } catch (PersistenceException e) {
             System.err.println("Failed to initialize EntityManagerFactory: " + e.getMessage());
             throw new ExceptionInInitializerError(e);
@@ -27,7 +47,11 @@ public class DatabaseConnection {
             entityTransaction.commit();
         } catch (Exception e) {
             System.err.println("Execute transaction error: " + e.getMessage());
-            entityTransaction.rollback();
+            e.printStackTrace();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
         } finally {
             entityManager.close();
         }
@@ -44,7 +68,11 @@ public class DatabaseConnection {
             entityTransaction.commit();
         } catch (Exception e) {
             System.err.println("Execute returning transaction error: " + e.getMessage());
-            entityTransaction.rollback();
+            e.printStackTrace();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
         } finally {
             entityManager.close();
         }
@@ -52,7 +80,7 @@ public class DatabaseConnection {
         return result;
     }
 
-    public static void closeFactory() {
+    public void closeFactory() {
         if (entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
         }
