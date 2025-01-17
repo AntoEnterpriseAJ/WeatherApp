@@ -77,6 +77,10 @@ public class ClientThread extends Thread implements Closeable {
             JsonObject weatherData = locationDao.getWeatherDataAt(client.getLocationId());
             return new Response(ResponseStatus.SUCCESS, weatherData.toString());
         } else if (request.getRequestType() == RequestType.UPDATE_WEATHER) {
+            if (client.getRole() != Role.ADMIN) {
+                return new Response(ResponseStatus.FAILED, STR."No permissions: your current role is \{client.getRole()}");
+            }
+
             Optional<LocationEntity> optionalLocationEntity = locationDao.getAtId(client.getLocationId());
             if (optionalLocationEntity.isEmpty()) {
                 return new Response(ResponseStatus.FAILED, "Cannot update weather at non-existing location");
