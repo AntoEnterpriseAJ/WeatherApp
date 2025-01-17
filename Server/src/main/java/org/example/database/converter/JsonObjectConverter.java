@@ -1,4 +1,4 @@
-package org.example.database;
+package org.example.database.converter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
