@@ -27,16 +27,6 @@ public class DatabaseConnection {
         }
     }
 
-    // Constructor that accepts a persistence unit name with additional properties
-    public DatabaseConnection(String persistenceUnitName, Map<String, String> properties) {
-        try {
-            this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
-        } catch (PersistenceException e) {
-            System.err.println("Failed to initialize EntityManagerFactory: " + e.getMessage());
-            throw new ExceptionInInitializerError(e);
-        }
-    }
-
     public void executeTransaction(Consumer<EntityManager> consumer) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
