@@ -9,6 +9,14 @@ import java.util.Optional;
 public class UserEntityDao implements Dao<UserEntity> {
     DatabaseConnection databaseConnection = new DatabaseConnection();
 
+    public UserEntityDao() {
+        databaseConnection = new DatabaseConnection();
+    }
+
+    public UserEntityDao(String persistence) {
+        databaseConnection = new DatabaseConnection(persistence);
+    }
+
     @Override
     public List<UserEntity> getAll() {
         return databaseConnection.executeReturnTransaction(

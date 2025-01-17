@@ -8,7 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class LocationEntityDao implements Dao<LocationEntity> {
-    DatabaseConnection databaseConnection = new DatabaseConnection();
+    DatabaseConnection databaseConnection;
+
+    public LocationEntityDao() {
+        databaseConnection = new DatabaseConnection();
+    }
+
+    public LocationEntityDao(String persistence) {
+        databaseConnection = new DatabaseConnection(persistence);
+    }
 
     public Optional<LocationEntity> getAtId(long id) {
         return Optional.ofNullable(databaseConnection.executeReturnTransaction(

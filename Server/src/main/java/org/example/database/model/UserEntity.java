@@ -2,6 +2,8 @@ package org.example.database.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "\"user\"", schema = "public")
 public class UserEntity {
@@ -61,6 +63,18 @@ public class UserEntity {
 
     public void setLocation(LocationEntity location) {
         this.location = location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(roleId, that.roleId) && Objects.equals(location, that.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, password, roleId, location);
     }
 
     @Override

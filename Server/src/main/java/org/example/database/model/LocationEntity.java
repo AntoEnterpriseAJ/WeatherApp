@@ -2,7 +2,9 @@ package org.example.database.model;
 
 import com.google.gson.JsonObject;
 import jakarta.persistence.*;
-import org.example.database.JsonObjectConverter;
+import org.example.database.converter.JsonObjectConverter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "location", schema = "public")
@@ -75,5 +77,17 @@ public class LocationEntity {
                 ", longitude=" + longitude +
                 ", weatherData='" + weatherData + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        LocationEntity that = (LocationEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude) && Objects.equals(weatherData, that.weatherData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, latitude, longitude, weatherData);
     }
 }

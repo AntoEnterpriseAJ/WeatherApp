@@ -6,7 +6,15 @@ import org.example.database.model.RoleEntity;
 import java.util.List;
 
 public class RoleEntityDao implements Dao<RoleEntity> {
-    DatabaseConnection databaseConnection = new DatabaseConnection();
+    DatabaseConnection databaseConnection;
+
+    public RoleEntityDao() {
+        databaseConnection = new DatabaseConnection();
+    }
+
+    public RoleEntityDao(String persistence) {
+        databaseConnection = new DatabaseConnection(persistence);
+    }
 
     @Override
     public List<RoleEntity> getAll() {

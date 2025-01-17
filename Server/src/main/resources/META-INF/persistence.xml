@@ -8,7 +8,8 @@
     <class>org.example.database.model.RoleEntity</class>
     <class>org.example.database.model.UserEntity</class>
     <class>org.example.database.model.UserRoleEntity</class>
-    <class>org.example.database.JsonObjectConverter</class>
+    <class>org.example.database.converter.JsonObjectConverter</class>
+    <class>org.example.database.converter.EnumObjectConverter</class>
     <properties>
       <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/WeatherData"/>
       <property name="jakarta.persistence.jdbc.user" value="postgres"/>
